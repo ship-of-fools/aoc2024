@@ -145,8 +145,14 @@ int main(int argc, char** argv){
     }
     // Part 2: Calculate similarity score
     int sum2 = 0;
+
+    unsigned int z[99999] = {0};
     for (size_t i = 0; i < list_length; i++){
-        sum2 += count_occur(a[i], b, list_length);
+        unsigned int dbg = b[i];
+        z[dbg] += 1;
+    }
+    for (size_t i = 0; i < list_length; i++){
+        sum2 += (z[a[i]] * a[i]);
     }
     printf("sum1: %u\n", sum1);
     printf("sum2: %u\n", sum2);
