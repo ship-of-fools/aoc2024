@@ -18,7 +18,8 @@ int main(void){
     size_t row = 0;
     size_t column = 0;
     char data[input_length][report_max_width+1]; //plus 1 for terminator
-    while((c = fgetc(fp)) != EOF){
+    do {
+        c = fgetc(fp);
         if (c == ' ' || c == '\n'){
             ss[i] = '\0';
             y = atoi(ss);
@@ -27,12 +28,12 @@ int main(void){
         } else {
             ss[i++] = c;
         }
-        if (c == '\n'){
+        if (c == '\n' || c == EOF){
             data[row][column] = -1;
             row++;
             column = 0;
         }
-    }
+    } while(c != EOF);
     // Part 1
     int sum1 = 0;
 
