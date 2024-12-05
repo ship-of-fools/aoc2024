@@ -5,9 +5,7 @@
 
 #define isdigit(c) ((c) >= '0' && (c) <= '9')
 
-char rules[256][256];
-unsigned char rules_len[256];
-
+unsigned char big_rules[9999];
 char updates[256][256];
 
 char incorrect_updates[256][256]; // for part 2
@@ -18,37 +16,16 @@ unsigned char correct_ids[256];
 unsigned char incorrect_ids_idx = 0;
 unsigned char correct_ids_idx = 0;
 
-int compare(const void *p, const void *q){
-    unsigned char x = *(unsigned char *)p;
-    unsigned char y = *(unsigned char *)q;
-    int i = 0;
-    while(1){
-        char not_allowed = rules[y][i++];
-        if (not_allowed == -1){
-            return 0;
-        }
-        if (not_allowed == x){
-            return 1;
-        }
-    }
-}
-
 char check_against_rules(char *update){
     unsigned char check_idx = 1;
     char c;
-    char i;
     while(c = update[check_idx], c != -1){
         char current_char = update[check_idx];
         char previous_char = update[check_idx-1];
-        while(1){
-            char not_allowed = rules[current_char][i++];
-            if (not_allowed == -1){
-                i = 0;
-                break;
-            }
-            if (not_allowed == previous_char){
-                return 0;
-            }
+        unsigned int big_char = current_char *100 + previous_char;
+        char not_allowed = big_rules[big_char];
+        if (not_allowed){
+            return 0;
         }
         check_idx++;
     }
@@ -58,24 +35,18 @@ char check_against_rules(char *update){
 char check_against_rules_p2(char *update){
     unsigned char check_idx = 1;
     char c;
-    unsigned char i;
     while(c = update[check_idx], c != -1){
 loop:
         char current_char = update[check_idx];
         char previous_char = update[check_idx-1];
-        while(1){
-            char not_allowed = rules[current_char][i++];
-            if (not_allowed == -1){
-                i = 0;
-                break;
-            }
-            if (not_allowed == previous_char){
-                char swap = update[check_idx];
-                update[check_idx] = update[check_idx-1];
-                update[check_idx-1] = swap;
-                check_idx = 1;
-                goto loop;
-            }
+        unsigned int big_char = current_char *100 + previous_char;
+        char not_allowed = big_rules[big_char];
+        if (not_allowed){
+            char swap = update[check_idx];
+            update[check_idx] = update[check_idx-1];
+            update[check_idx-1] = swap;
+            check_idx = 1;
+            goto loop;
         }
         check_idx++;
     }
@@ -84,12 +55,12 @@ loop:
 
 
 int main(int argc, char** argv){
+    clock_t begin = clock();
     FILE *fp;
     fp = fopen("input.txt", "r");
     
-    memset(rules, -1, 256*256);
-    memset(rules_len, 0, 256);
     memset(updates, -1, 256*256);
+    memset(big_rules, 0, 99*99);
 
     // Read data
     char c = 0;
@@ -106,7 +77,8 @@ int main(int argc, char** argv){
         c = fgetc(fp);
         cc = fgetc(fp);
         n2 = (c-'0')*10 + (cc-'0');
-        rules[n][rules_len[n]++] = n2; 
+        unsigned int idx = n*100+n2;
+        big_rules[idx]=1;
         c = fgetc(fp); // \n 
     }
     int i = 0;
@@ -155,8 +127,7 @@ int main(int argc, char** argv){
         for (len = 0; len < 255; len++){ // Calculate size of this update
             if (incorrect_updates[i][len] == -1)break;
         }
-        qsort(&incorrect_updates[i][0], len, sizeof(incorrect_updates[i][0]), compare);
-        // check_against_rules_p2(&incorrect_updates[i][0]);
+        check_against_rules_p2(&incorrect_updates[i][0]);
     }
     int sum2 = 0;
     for (int i = 0; i <= num_incorrect_updates; i++){
@@ -167,6 +138,8 @@ int main(int argc, char** argv){
             }
         }
     }
-    printf("sum1: %d\n", sum1);
-    printf("sum2: %d\n", sum2);
+    printf("sum1: %d\nsum2: %d\n", sum1, sum2);
+    clock_t end = clock();
+    double time_spent = (double)(end - begin); //in microseconds
+    printf("%f\n", time_spent);
 }
