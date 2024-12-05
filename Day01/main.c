@@ -7,6 +7,8 @@
 #include <string.h>
 #include <time.h>
 
+#define is_digit(c) ((c) >= '0' && (c) <= '9')
+
 int count_occur(unsigned int x, unsigned int *arr, size_t len){
     int result = 0;
     int count = 0;
@@ -138,12 +140,15 @@ int main(int argc, char** argv){
 
 		unsigned int bb = ((unsigned int)ptr[idx+8]-'0')*10000 + ((unsigned int)ptr[idx+9]-'0')*1000
 		 + ((unsigned int)ptr[idx+10]-'0')*100 + ((unsigned int)ptr[idx+11]-'0')*10 + ((unsigned int)ptr[idx+12]-'0');
-
-		a[ii] = aa;
-		b[ii++] = bb;
+		if(ii < list_length){
+			a[ii] = aa;
+			b[ii++] = bb;
+		}
 		idx += 14;
+		if (!is_digit((unsigned int)ptr[idx])){ // Handle windows CRLF extra byte
+			idx++;
+		}
 	}
-	
     radixsort256(a, list_length);
     radixsort256(b, list_length);
     // qsort(a, list_length, sizeof(unsigned int), compare);
