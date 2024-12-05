@@ -155,7 +155,7 @@ int main(int argc, char** argv){
         for (len = 0; len < 255; len++){ // Calculate size of this update
             if (incorrect_updates[i][len] == -1)break;
         }
-        qsort(&incorrect_updates[i][0], len, sizeof(char), compare);
+        qsort(&incorrect_updates[i][0], len, sizeof(incorrect_updates[i][0]), compare);
         // check_against_rules_p2(&incorrect_updates[i][0]);
     }
     int sum2 = 0;
