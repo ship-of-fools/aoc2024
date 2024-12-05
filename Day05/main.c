@@ -55,7 +55,6 @@ loop:
 
 
 int main(int argc, char** argv){
-    clock_t begin = clock();
     FILE *fp;
     fp = fopen("input.txt", "r");
     
@@ -139,7 +138,4 @@ int main(int argc, char** argv){
         }
     }
     printf("sum1: %d\nsum2: %d\n", sum1, sum2);
-    clock_t end = clock();
-    double time_spent = (double)(end - begin); //in microseconds
-    printf("%f\n", time_spent);
 }
