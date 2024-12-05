@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define isdigit(c) ((c) >= '0' && (c) <= '9')
 
@@ -17,24 +18,38 @@ unsigned char correct_ids[256];
 unsigned char incorrect_ids_idx = 0;
 unsigned char correct_ids_idx = 0;
 
+int compare(const void *p, const void *q){
+    char x = *(char *)p;
+    char y = *(char *)q;
+    int i = 0;
+    while(1){
+        char not_allowed = rules[y][i++];
+        if (not_allowed == -1){
+            return 0;
+        }
+        if (not_allowed == x){
+            return 1;
+        }
+    }
+}
+
 char check_against_rules(char *update){
     char check[256];
     char check_idx = 1;
-    while(1){
+    char c;
+    char i;
+    while(c = update[check_idx], c != -1){
         char current_char = update[check_idx];
-        if (current_char == -1)break;
-        check[check_idx-1] = update[check_idx-1]; //75
-        for (int j=0; j<check_idx; j++){
-            char c = check[j];
-                int idx = 0;
-                while(1){
-                    char rule = rules[current_char][idx++];
-                    if (rule == -1)break;
-                    if (rule == c){
-                        // printf("rule broken, %u|%u\n", current_char, rule);
-                        return 0;
-                    }
-                }
+        char previous_char = update[check_idx-1];
+        while(1){
+            char not_allowed = rules[current_char][i++];
+            if (not_allowed == -1){
+                i = 0;
+                break;
+            }
+            if (not_allowed == previous_char){
+                return 0;
+            }
         }
         check_idx++;
     }
@@ -44,27 +59,25 @@ char check_against_rules(char *update){
 char check_against_rules_p2(char *update){
     char check[256];
     char check_idx = 1;
-    while(1){
+    char c;
+    char i;
+    while(c = update[check_idx], c != -1){
 loop:
-        char current_char = update[check_idx]; //47
-        if (current_char == -1)break;
-        check[check_idx-1] = update[check_idx-1]; //75
-        for (int j=0; j<check_idx; j++){
-            char c = check[j];
-                int idx = 0;
-                while(1){
-                    char rule = rules[current_char][idx++];
-                    if (rule == -1)break;
-                    if (rule == c){
-                        // printf("rule broken, %u|%u\n", current_char, rule);
-                        char swap = update[check_idx];
-                        update[check_idx] = update[j];
-                        update[j] = swap;
-                        check_idx = 1;
-                        goto loop;
-                        return 0;
-                    }
-                }
+        char current_char = update[check_idx];
+        char previous_char = update[check_idx-1];
+        while(1){
+            char not_allowed = rules[current_char][i++];
+            if (not_allowed == -1){
+                i = 0;
+                break;
+            }
+            if (not_allowed == previous_char){
+                char swap = update[check_idx];
+                update[check_idx] = update[check_idx-1];
+                update[check_idx-1] = swap;
+                check_idx = 1;
+                goto loop;
+            }
         }
         check_idx++;
     }
@@ -144,7 +157,11 @@ int main(int argc, char** argv){
 
     //Part 2
     for (int i = 0; i <= num_incorrect_updates; i++){
-        check_against_rules_p2(&incorrect_updates[i][0]);
+        int len = 0;
+        for (len = 0; len < 255; len++){ // Calculate size of this update
+            if (incorrect_updates[i][len] == -1)break;
+        }
+        qsort(&incorrect_updates[i][0], len, 1, compare);
     }
     int sum2 = 0;
     for (int i = 0; i <= num_incorrect_updates; i++){
