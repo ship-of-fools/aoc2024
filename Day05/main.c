@@ -19,8 +19,8 @@ unsigned char incorrect_ids_idx = 0;
 unsigned char correct_ids_idx = 0;
 
 int compare(const void *p, const void *q){
-    char x = *(char *)p;
-    char y = *(char *)q;
+    unsigned char x = *(unsigned char *)p;
+    unsigned char y = *(unsigned char *)q;
     int i = 0;
     while(1){
         char not_allowed = rules[y][i++];
@@ -34,8 +34,7 @@ int compare(const void *p, const void *q){
 }
 
 char check_against_rules(char *update){
-    char check[256];
-    char check_idx = 1;
+    unsigned char check_idx = 1;
     char c;
     char i;
     while(c = update[check_idx], c != -1){
@@ -57,10 +56,9 @@ char check_against_rules(char *update){
 }
 
 char check_against_rules_p2(char *update){
-    char check[256];
-    char check_idx = 1;
+    unsigned char check_idx = 1;
     char c;
-    char i;
+    unsigned char i;
     while(c = update[check_idx], c != -1){
 loop:
         char current_char = update[check_idx];
@@ -88,8 +86,6 @@ loop:
 int main(int argc, char** argv){
     FILE *fp;
     fp = fopen("input.txt", "r");
-    const unsigned char rows = 140;
-    const unsigned char columns = 140; 
     
     memset(rules, -1, 256*256);
     memset(rules_len, 0, 256);
@@ -129,8 +125,6 @@ int main(int argc, char** argv){
     }
 
     int num_updates = i+1;
-    char check[256];
-    char check_idx = 1;
     
     for(int i=0; i<num_updates; i++){
         char passed = check_against_rules(&updates[i][0]);
