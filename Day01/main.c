@@ -1,4 +1,8 @@
 #include <stdio.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -115,26 +119,31 @@ void radixsort10(unsigned int arr[], unsigned int n)
 }
 
 int main(int argc, char** argv){
-
-    FILE *fp;
-    int c;
-    char s[1024];
-
-    const size_t list_length = 1000;
+	const size_t list_length = 1000;
 
     unsigned int a[list_length];
     unsigned int b[list_length];
-    unsigned int x;
-    unsigned int y;
+	
+	int fd = open("input.txt", O_RDONLY);
+	struct stat st;
+	size_t size;
+	int status = fstat(fd, &st);
+	size = st.st_size;
+	char *ptr = (char*) mmap(0,size,PROT_READ,MAP_PRIVATE,fd,0);
+	size_t idx = 0;
+	unsigned int ii = 0;
+	while(idx < size){
+		unsigned int aa = ((unsigned int)ptr[idx]-'0')*10000 + ((unsigned int)ptr[idx+1]-'0')*1000
+		 + ((unsigned int)ptr[idx+2]-'0')*100 + ((unsigned int)ptr[idx+3]-'0')*10 + ((unsigned int)ptr[idx+4]-'0');
 
-    fp = fopen("input.txt", "r");
-    int i = 0;
-    while (fscanf(fp, "%u %u", &x, &y) != EOF){
-        a[i] = x;
-        b[i] = y;
-        i++;
-    }
-    fclose(fp);
+		unsigned int bb = ((unsigned int)ptr[idx+8]-'0')*10000 + ((unsigned int)ptr[idx+9]-'0')*1000
+		 + ((unsigned int)ptr[idx+10]-'0')*100 + ((unsigned int)ptr[idx+11]-'0')*10 + ((unsigned int)ptr[idx+12]-'0');
+
+		a[ii] = aa;
+		b[ii++] = bb;
+		idx += 14;
+	}
+	
     radixsort256(a, list_length);
     radixsort256(b, list_length);
     // qsort(a, list_length, sizeof(unsigned int), compare);
@@ -154,7 +163,6 @@ int main(int argc, char** argv){
     for (size_t i = 0; i < list_length; i++){
         sum2 += (z[a[i]] * a[i]);
     }
-    printf("sum1: %u\n", sum1);
-    printf("sum2: %u\n", sum2);
+    printf("sum1: %u\nsum2: %u\n", sum1, sum2);
     return 0;
 }
