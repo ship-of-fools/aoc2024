@@ -177,7 +177,7 @@ int main(int argc, char** argv){
     int sum2 = 0;
     for (row_idx = 1; row_idx < height; row_idx++){
         for (col_idx = 1; col_idx < width; col_idx++){
-            if (map[row_idx][col_idx] == '#' || map[row_idx][col_idx] == '^'){
+            if (map[row_idx][col_idx] != 'X'){
                 continue;
             }
             map[row_idx][col_idx] = '#';
