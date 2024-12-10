@@ -77,7 +77,6 @@ int main(int argc, char** argv){
         // idx += 2; // ": "
         unsigned char i = 0;
         while(((unsigned char)ptr[idx] != '\n' )&((unsigned char)ptr[idx] != '\0')){
-            unsigned char dbg = (unsigned char)ptr[idx];
             unsigned int number = 0;
             numbers_tens[row][i] = 1;
             while(isdigit((unsigned char)ptr[idx])){
