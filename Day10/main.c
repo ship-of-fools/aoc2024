@@ -9,10 +9,9 @@
 
 #define isdigit(c) ((c) >= '0' && (c) <= '9')
 #define ismarker(c) ((c) == '.' || (c) == '#' || (c) == '^')
-// #define map_w (8+2)
-// #define map_h (8+2)
-#define map_w (41+2)
-#define map_h (40+2)
+
+const uint8_t map_w = 64;
+const uint8_t map_h = 64;
 
 void progress(const char map[][map_w], uint8_t pos[2], uint8_t end_map[][map_w]){
     uint8_t current_height = map[pos[0]][pos[1]];
@@ -41,7 +40,7 @@ void progress(const char map[][map_w], uint8_t pos[2], uint8_t end_map[][map_w])
 int main(int argc, char** argv){
     
     // int fd = open("example.txt", O_RDONLY);
-    int fd = open("input.txt", O_RDONLY);
+    int fd = open("input2.txt", O_RDONLY);
     char map[map_h][map_w];
     memset(map, -1, sizeof(char)*(map_h)*(map_w));
 
