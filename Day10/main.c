@@ -40,7 +40,7 @@ void progress(const char map[][map_w], uint8_t pos[2], uint8_t end_map[][map_w])
 int main(int argc, char** argv){
     
     // int fd = open("example.txt", O_RDONLY);
-    int fd = open("input2.txt", O_RDONLY);
+    int fd = open("input.txt", O_RDONLY);
     char map[map_h][map_w];
     memset(map, -1, sizeof(char)*(map_h)*(map_w));
 
