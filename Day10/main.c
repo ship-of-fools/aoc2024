@@ -54,19 +54,18 @@ int main(int argc, char** argv){
     size_t map_row_idx = 1;
     size_t map_col_idx = 1;
 
-    uint8_t trail_start_locs[256][2];
-    uint8_t trail_start_num = 0;
+    uint8_t trail_start_locs[512][2];
+    uint16_t trail_start_num = 0;
 
-    uint8_t trail_end_locs[256][2];
-    uint8_t trail_end_num = 0; 
+    uint8_t trail_end_locs[512][2];
+    uint16_t trail_end_num = 0; 
 
 	while(idx < size){
         if (isdigit((char)ptr[idx])){
             if ((char)ptr[idx]-'0' == 0){
                 trail_start_locs[trail_start_num][0] = map_row_idx;
                 trail_start_locs[trail_start_num++][1] = map_col_idx;
-            }
-            if ((char)ptr[idx]-'0' == 9){
+            } else if ((char)ptr[idx]-'0' == 9){
                 trail_end_locs[trail_end_num][0] = map_row_idx;
                 trail_end_locs[trail_end_num++][1] = map_col_idx;
             }
@@ -84,13 +83,13 @@ int main(int argc, char** argv){
 
     uint16_t sum1 = 0;
     uint16_t sum2 = 0;
-    for (uint8_t i = 0; i < trail_start_num; ++i){
+    for (uint16_t i = 0; i < trail_start_num; ++i){
         uint8_t end_map[map_h][map_w];
         memset(end_map, 0, sizeof(uint8_t)*(map_h)*(map_w));
         progress(map, &trail_start_locs[i][0], end_map);
         uint8_t score = 0;
         uint8_t rating = 0;
-        for (uint8_t j = 0; j < trail_end_num; ++j){
+        for (uint16_t j = 0; j < trail_end_num; ++j){
             if (end_map[trail_end_locs[j][0]][trail_end_locs[j][1]] > 0){
                 score++;
                 rating += end_map[trail_end_locs[j][0]][trail_end_locs[j][1]];
