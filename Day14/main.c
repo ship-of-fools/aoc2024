@@ -28,7 +28,7 @@ typedef struct
 
 int main(int argc, char** argv){
     // int fd = open("example.txt", O_RDONLY);
-    int fd = open("input.txt", O_RDONLY);
+    int fd = open("input2.txt", O_RDONLY);
 
 	struct stat st;
 	size_t size;
@@ -131,6 +131,7 @@ int main(int argc, char** argv){
         uint8_t second_row_idx = 0;
         for (uint8_t j = 0; j < map_h; j++){
             if (rows_count[j] > first_row){
+                second_row = first_row;
                 first_row = rows_count[j];
                 first_row_idx = j;
             } else if (rows_count[j] > second_row){
@@ -144,6 +145,7 @@ int main(int argc, char** argv){
         uint8_t second_col_idx = 0;
         for (uint8_t j = 0; j < map_w; j++){
             if (cols_count[j] > first_col){
+                second_col = first_col;
                 first_col = cols_count[j];
                 first_col_idx = j;
             } else if (cols_count[j] > second_col){
@@ -152,11 +154,11 @@ int main(int argc, char** argv){
             }
         }
 
-        if ((first_row >= 26) & (second_row >= 26) & (first_col >= 26) & (second_col >= 26)){
+        if ((first_row > 30) & (second_row > 30) & (first_col > 30) & (second_col > 30)){
             sum2 = i+1;
             break;
-            uint8_t row[2][map_w];
-            memset(row, 0, sizeof(uint8_t)*map_w*2);
+            // uint8_t row[2][map_w];
+            // memset(row, 0, sizeof(uint8_t)*map_w*2);
             // for (uint16_t j = 0; j < 500; ++j){
             //     if (robots[j].x == first_idx){
             //         row[0][robots[j].y] = 1;
