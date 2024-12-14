@@ -28,7 +28,7 @@ typedef struct
 
 int main(int argc, char** argv){
     // int fd = open("example.txt", O_RDONLY);
-    int fd = open("input2.txt", O_RDONLY);
+    int fd = open("input.txt", O_RDONLY);
 
 	struct stat st;
 	size_t size;
