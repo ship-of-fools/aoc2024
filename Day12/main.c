@@ -46,7 +46,6 @@ int main(int argc, char** argv){
         idx++;
         col = 1;
     }
-
     uint8_t seen[map_w+2][map_w+2];
     memset(seen, 0, sizeof(uint8_t)*(map_w+2)*(map_w+2));
     uint32_t sum1 = 0;
