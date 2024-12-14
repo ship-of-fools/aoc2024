@@ -114,110 +114,128 @@ int main(int argc, char** argv){
 
         uint8_t rows_count[map_h];
         memset(rows_count, 0, sizeof(uint8_t)*map_h);
+        uint8_t cols_count[map_w];
+        memset(cols_count, 0, sizeof(uint8_t)*map_w);
 
         // Do one move
         for (uint16_t j = 0; j < 500; j++){
             robots[j].x = (((robots[j].x + robots[j].vel_x) % map_w) + map_w) % map_w;
             robots[j].y = (((robots[j].y + robots[j].vel_y) % map_h) + map_h) % map_h;
             rows_count[robots[j].x] += 1;
+            cols_count[robots[j].y] += 1;
         }
 
-        uint8_t first = 0;
-        uint8_t first_idx = 0;
-        uint8_t second = 0;
-        uint8_t second_idx = 0;
+        uint8_t first_row = 0;
+        uint8_t first_row_idx = 0;
+        uint8_t second_row = 0;
+        uint8_t second_row_idx = 0;
         for (uint8_t j = 0; j < map_h; j++){
-            if (rows_count[j] > first){
-                first = rows_count[j];
-                first_idx = j;
-            } else if (rows_count[j] > second){
-                second = rows_count[j];
-                second_idx = j;
+            if (rows_count[j] > first_row){
+                first_row = rows_count[j];
+                first_row_idx = j;
+            } else if (rows_count[j] > second_row){
+                second_row = rows_count[j];
+                second_row_idx = j;
+            }
+        }
+        uint8_t first_col = 0;
+        uint8_t first_col_idx = 0;
+        uint8_t second_col = 0;
+        uint8_t second_col_idx = 0;
+        for (uint8_t j = 0; j < map_w; j++){
+            if (cols_count[j] > first_col){
+                first_col = cols_count[j];
+                first_col_idx = j;
+            } else if (cols_count[j] > second_col){
+                second_col = cols_count[j];
+                second_col_idx = j;
             }
         }
 
-        if ((first > 30) & (second > 30)){
+        if ((first_row >= 26) & (second_row >= 26) & (first_col >= 26) & (second_col >= 26)){
+            sum2 = i+1;
+            break;
             uint8_t row[2][map_w];
             memset(row, 0, sizeof(uint8_t)*map_w*2);
-            for (uint16_t j = 0; j < 500; ++j){
-                if (robots[j].x == first_idx){
-                    row[0][robots[j].y] = 1;
-                }
-                if (robots[j].x == second_idx){
-                    row[1][robots[j].y] = 1;
-                }
-            }
-            uint8_t longest_line_length = 0;
-            uint8_t longest_line_idx = 0;
-            uint8_t on_line = 0;
-            uint8_t current_line_length = 0;
-            uint8_t current_line_idx = 0;
-            for (uint8_t j = 0; j < map_w; ++j){
-                if (!on_line){
-                    if (row[0][j] == 0)continue;
-                    if (row[0][j] == 1){
-                        on_line = 1;
-                        current_line_idx = j;
-                        current_line_length = 1;
-                        continue;
-                    }
-                }
-                if (on_line){
-                    if (row[0][j] == 1){
-                        current_line_length++;
-                        continue;
-                    }
-                    if (row[0][j] == 0){
-                        on_line = 0;
-                        if (current_line_length > longest_line_length){
-                            longest_line_length = current_line_length;
-                            longest_line_idx = current_line_idx;
-                        }
-                    }
-                }
-            }
-            uint8_t row_0_longest_line_length = longest_line_length;
-            uint8_t row_0_longest_line_idx = longest_line_idx;
+            // for (uint16_t j = 0; j < 500; ++j){
+            //     if (robots[j].x == first_idx){
+            //         row[0][robots[j].y] = 1;
+            //     }
+            //     if (robots[j].x == second_idx){
+            //         row[1][robots[j].y] = 1;
+            //     }
+            // }
+            // uint8_t longest_line_length = 0;
+            // uint8_t longest_line_idx = 0;
+            // uint8_t on_line = 0;
+            // uint8_t current_line_length = 0;
+            // uint8_t current_line_idx = 0;
+            // for (uint8_t j = 0; j < map_w; ++j){
+            //     if (!on_line){
+            //         if (row[0][j] == 0)continue;
+            //         if (row[0][j] == 1){
+            //             on_line = 1;
+            //             current_line_idx = j;
+            //             current_line_length = 1;
+            //             continue;
+            //         }
+            //     }
+            //     if (on_line){
+            //         if (row[0][j] == 1){
+            //             current_line_length++;
+            //             continue;
+            //         }
+            //         if (row[0][j] == 0){
+            //             on_line = 0;
+            //             if (current_line_length > longest_line_length){
+            //                 longest_line_length = current_line_length;
+            //                 longest_line_idx = current_line_idx;
+            //             }
+            //         }
+            //     }
+            // }
+            // uint8_t row_0_longest_line_length = longest_line_length;
+            // uint8_t row_0_longest_line_idx = longest_line_idx;
 
-            longest_line_length = 0;
-            longest_line_idx = 0;
-            on_line = 0;
-            current_line_length = 0;
-            current_line_idx = 0;
-            for (uint8_t j = 0; j < map_w; ++j){
-                if (!on_line){
-                    if (row[1][j] == 0)continue;
-                    if (row[1][j] == 1){
-                        on_line = 1;
-                        current_line_idx = j;
-                        current_line_length = 1;
-                        continue;
-                    }
-                }
-                if (on_line){
-                    if (row[1][j] == 1){
-                        current_line_length++;
-                        continue;
-                    }
-                    if (row[1][j] == 0){
-                        on_line = 0;
-                        if (current_line_length > longest_line_length){
-                            longest_line_length = current_line_length;
-                            longest_line_idx = current_line_idx;
-                        }
-                    }
-                }
-            }
-            uint8_t row_1_longest_line_length = longest_line_length;
-            uint8_t row_1_longest_line_idx = longest_line_idx;
+            // longest_line_length = 0;
+            // longest_line_idx = 0;
+            // on_line = 0;
+            // current_line_length = 0;
+            // current_line_idx = 0;
+            // for (uint8_t j = 0; j < map_w; ++j){
+            //     if (!on_line){
+            //         if (row[1][j] == 0)continue;
+            //         if (row[1][j] == 1){
+            //             on_line = 1;
+            //             current_line_idx = j;
+            //             current_line_length = 1;
+            //             continue;
+            //         }
+            //     }
+            //     if (on_line){
+            //         if (row[1][j] == 1){
+            //             current_line_length++;
+            //             continue;
+            //         }
+            //         if (row[1][j] == 0){
+            //             on_line = 0;
+            //             if (current_line_length > longest_line_length){
+            //                 longest_line_length = current_line_length;
+            //                 longest_line_idx = current_line_idx;
+            //             }
+            //         }
+            //     }
+            // }
+            // uint8_t row_1_longest_line_length = longest_line_length;
+            // uint8_t row_1_longest_line_idx = longest_line_idx;
 
-            if (row_0_longest_line_length > 20){
-                if ((row_0_longest_line_idx == row_1_longest_line_idx) &
-                    (row_0_longest_line_length == row_1_longest_line_length)){
-                        sum2 = i+1;
-                        break;
-                    }
-            }
+            // if (row_0_longest_line_length > 20){
+            //     if ((row_0_longest_line_idx == row_1_longest_line_idx) &
+            //         (row_0_longest_line_length == row_1_longest_line_length)){
+            //             sum2 = i+1;
+            //             break;
+            //         }
+            // }
         }
     }
     printf("sum1: %lu\nsum2: %lu\n", sum1, sum2);
