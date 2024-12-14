@@ -211,11 +211,13 @@ int main(int argc, char** argv){
             uint8_t row_1_longest_line_length = longest_line_length;
             uint8_t row_1_longest_line_idx = longest_line_idx;
 
-            if ((row_0_longest_line_idx == row_1_longest_line_idx) &
-                 (row_0_longest_line_length == row_1_longest_line_length)){
-                    sum2 = i+1;
-                    break;
-                 }
+            if (row_0_longest_line_length > 20){
+                if ((row_0_longest_line_idx == row_1_longest_line_idx) &
+                    (row_0_longest_line_length == row_1_longest_line_length)){
+                        sum2 = i+1;
+                        break;
+                    }
+            }
         }
     }
     printf("sum1: %lu\nsum2: %lu\n", sum1, sum2);
