@@ -32,6 +32,16 @@ uint8_t in_queue(uint8_t Q[32][2], uint8_t r, uint8_t c, uint8_t len){
     }
     return 0;
 }
+uint8_t in_queuep2(uint8_t Q[32][3], uint8_t r, uint8_t c, uint8_t len){
+    for (uint8_t i = 0; i<len; i++){
+        if (Q[i][0] == r){
+            if (Q[i][1] == c){
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
 void print_map(uint8_t map[map_w][map_w]){
     for (uint8_t i = 0; i < map_w; i++){
         for (uint8_t j = 0; j < map_w; j++){
@@ -44,7 +54,10 @@ void print_map(uint8_t map[map_w][map_w]){
 void print_map2(uint8_t map[map_w][map_w*2]){
     for (uint8_t i = 0; i < map_w; i++){
         for (uint8_t j = 0; j < map_w*2; j++){
-            printf("%c ", map[i][j]);
+            // if (map[i][j] == '.'){
+            //     printf("  ")
+            // 
+            printf("%c", map[i][j]);
         }
         printf("\n");
     }
@@ -53,8 +66,6 @@ void print_map2(uint8_t map[map_w][map_w*2]){
 
 int main(int argc, char** argv){
     int fd = open(input_file, O_RDONLY);
-    
-
 	struct stat st;
 	size_t size;
 	int status = fstat(fd, &st);
@@ -234,9 +245,9 @@ int main(int argc, char** argv){
                     batch_qp2[batch_q_len++][2] = ']';
                     pos_q[pos_q_len][0] = nr;
                     pos_q[pos_q_len++][1] = nc;
-                    if (!in_queue(pos_q, nr, nc-1, pos_q_len)){ // add [ if it's not already in Q
-                        batch_qp2[batch_q_len][0] = nr;
-                        batch_qp2[batch_q_len][1] = nc-1;
+                    if (!in_queuep2(batch_qp2, nr, nc-1, batch_q_len)){ // add [ if it's not already in Q
+                        batch_qp2[batch_q_len][0] = nr;                 // TODO: These queues are still getting too big
+                        batch_qp2[batch_q_len][1] = nc-1;               
                         batch_qp2[batch_q_len++][2] = '[';
                         pos_q[pos_q_len][0] = nr;
                         pos_q[pos_q_len++][1] = nc-1;
@@ -260,7 +271,7 @@ int main(int argc, char** argv){
                     batch_qp2[batch_q_len++][2] = '[';
                     pos_q[pos_q_len][0] = nr;
                     pos_q[pos_q_len++][1] = nc;
-                    if (!in_queue(pos_q, nr, nc+1, pos_q_len)){ // add ] if it's not already in Q
+                    if (!in_queuep2(batch_qp2, nr, nc+1, batch_q_len)){ // add ] if it's not already in Q
                         batch_qp2[batch_q_len][0] = nr;
                         batch_qp2[batch_q_len][1] = nc+1;
                         batch_qp2[batch_q_len++][2] = ']';
@@ -280,6 +291,12 @@ int main(int argc, char** argv){
     
         sr = sr + dr;
         sc = sc + dc;
+        // if (i >= 17504){
+        //     print_map2(map_p2);
+
+        //     printf("%u\n", i);
+        //     char t = getchar();
+        // }
     }
 
     uint64_t sum2 = 0;
