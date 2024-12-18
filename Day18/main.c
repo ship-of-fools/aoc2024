@@ -16,7 +16,10 @@
 #define map_w (71+2)
 #define first_fall 1024
 #define input_name "input.txt"
-#define binary_search
+#define BINARY_SEARCH
+
+// Could implement a smart linear search that checks each fall to see if it lands on the current path, if not continue.
+// Might be faster than binary search
 
 uint8_t sr = 1;
 uint8_t sc = 1;
@@ -203,7 +206,7 @@ int main(int argc, char** argv){
     uint8_t bb_r = bytes_list[num_fallen][1]-1;
     uint8_t bb_c = bytes_list[num_fallen][0]-1;
 
-#ifdef binary_search    
+#ifdef BINARY_SEARCH    
     uint16_t bytes_list_idx_l = first_fall;
     uint16_t bytes_list_idx_h = bytes_list_idx-1;
     uint16_t bytes_list_idx_m = (bytes_list_idx_l + bytes_list_idx_h) / 2;
